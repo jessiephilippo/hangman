@@ -1,0 +1,13 @@
+linters:
+  enable:
+  - goimports
+  - gofmt
+  - revive
+  - stylecheck
+  - wsl
+  - goconst
+  - gofumpt
+  - nilerr
+  - dupl
+  - errorlint
+  - errname

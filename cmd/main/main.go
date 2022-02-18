@@ -70,13 +70,11 @@ func getWordGuessingProgress(targetWord string, guessedLetters map[rune]bool) st
 	for _, v := range targetWord {
 		if v == ' ' {
 			result += " "
-		}
-
-		if guessedLetters[unicode.ToLower(v)] {
+		} else if guessedLetters[unicode.ToLower(v)] {
 			result += fmt.Sprintf("%c", v)
+		} else {
+			result += "_"
 		}
-
-		result += "_"
 	}
 
 	return result

@@ -4,20 +4,38 @@ import (
 	"bufio"
 	"fmt"
 	"io/ioutil"
+	"math/rand"
 	"os"
 	"strings"
-	"unicode"
-
-	"github.com/tjarratt/babble"
+	"time"
 )
 
-var usedLetters = []string{}
+var (
+	usedLetters    = []string{}
+	guessedLetters = map[rune]bool{}
+	dictionary     = []string{
+		"Hello world",
+		"Zimbabwe",
+		"Counter strike",
+		"Game project",
+		"Horse",
+		"School",
+		"hangman",
+		"Shooter",
+		"Terrorism",
+		"National Geographic",
+		"Snake",
+		"Optimus Prime",
+		"Computer",
+		"Motor Cycle",
+	}
+)
 
 func main() {
-	targetWord := randomWord()
-	hangmanState := 0
+	rand.Seed(time.Now().UnixNano())
+	targetWord := strings.ToLower(dictionary[rand.Intn(len(dictionary))])
 
-	guessedLetters := map[rune]bool{}
+	hangmanState := 0
 
 	fmt.Printf("Word has %d letters\n", len(targetWord))
 
@@ -39,7 +57,6 @@ func main() {
 			hangmanState++
 		}
 	}
-	fmt.Println("Game over... word was:", targetWord)
 
 	if isWordGuessed(targetWord, guessedLetters) {
 		fmt.Println("You win!")
@@ -48,14 +65,6 @@ func main() {
 	} else {
 		panic("Invalid state. Game is over and there is no winner!")
 	}
-}
-
-func randomWord() string {
-	babbler := babble.NewBabbler()
-	randomWord := babbler.Babble()
-	replacer := strings.NewReplacer("-", " ", "'", "")
-
-	return replacer.Replace(randomWord)
 }
 
 func printGameState(targetWord string, guessedLetters map[rune]bool, hangmanState int) {
@@ -70,7 +79,7 @@ func getWordGuessingProgress(targetWord string, guessedLetters map[rune]bool) st
 	for _, v := range targetWord {
 		if v == ' ' {
 			result += " "
-		} else if guessedLetters[unicode.ToLower(v)] {
+		} else if guessedLetters[v] {
 			result += fmt.Sprintf("%c", v)
 		} else {
 			result += "_"
@@ -104,7 +113,7 @@ func readInput() string {
 
 func isWordGuessed(targetWord string, guessedLetters map[rune]bool) bool {
 	for _, v := range targetWord {
-		if !guessedLetters[unicode.ToLower(v)] {
+		if !guessedLetters[v] {
 			return false
 		}
 	}
